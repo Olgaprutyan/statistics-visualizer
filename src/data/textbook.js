@@ -25,28 +25,44 @@ export const textbook = [
         title: 'Главный вопрос',
       },
       {
+        id: 'means-intro',
+        title: 'Выборочные средние',
+      },
+      {
         id: 'experiment',
         title: 'Эксперимент',
+      },
+      {
+        id: 'mini-lab',
+        title: 'Мини-лаборатория',
+      },
+      {
+        id: 'build-up',
+        title: 'Как рождается распределение',
+      },
+      {
+        id: 'center-height',
+        title: 'Почему центр высокий',
       },
       {
         id: 'observation',
         title: 'Что ты заметил?',
       },
       {
-        id: 'intuition',
-        title: 'Интуитивное объяснение',
+        id: 'stability',
+        title: 'Стабильность средних',
+      },
+      {
+        id: 'spread-shrink',
+        title: 'Почему разброс сужается',
+      },
+      {
+        id: 'summary-gather',
+        title: 'Итоги раздела',
       },
       {
         id: 'formal',
         title: 'Формальный вывод',
-      },
-      {
-        id: 'try-it',
-        title: 'Попробуй сам',
-      },
-      {
-        id: 'exercises',
-        title: 'Задания',
       },
     ],
   },

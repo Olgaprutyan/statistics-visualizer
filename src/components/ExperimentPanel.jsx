@@ -81,6 +81,37 @@ function generateSampleMeans({
 }
 
 /*
+ * Размер демонстрационной выборки для показа формы
+ * исходного распределения. Эти наблюдения нужны только
+ * для первого графика и не влияют на симуляцию средних.
+ */
+const SOURCE_SAMPLE_SIZE = 8000
+
+/*
+ * Большая выборка отдельных наблюдений из выбранного
+ * распределения — чтобы показать его форму.
+ */
+function generateSourceSample(distribution, size = SOURCE_SAMPLE_SIZE) {
+  const observations = []
+
+  for (let index = 0; index < size; index += 1) {
+    observations.push(generateObservation(distribution))
+  }
+
+  return observations
+}
+
+/*
+ * Приводит число повторений к допустимому диапазону.
+ */
+function clampRepetitions(value) {
+  return Math.min(
+    Math.max(Number(value) || 100, 100),
+    10000,
+  )
+}
+
+/*
  * Строит интервалы гистограммы.
  */
 function createHistogram(values, numberOfBins = 24) {
@@ -183,14 +214,24 @@ function formatNumber(value) {
   return value.toFixed(3)
 }
 
-function Histogram({ bins, sampleMean, standardDeviation }) {
+function Histogram({
+  bins,
+  sampleMean,
+  standardDeviation,
+  showNormalCurve = false,
+  axisLabel = 'Выборочное среднее',
+  ariaLabel = 'Гистограмма распределения выборочных средних',
+  markerLabel = 'Среднее',
+  primaryStatLabel = 'Среднее средних',
+  secondaryStatLabel = 'Стандартное отклонение',
+}) {
   const width = 720
-  const height = 390
+  const height = 600
 
   const margin = {
-    top: 28,
+    top: 30,
     right: 24,
-    bottom: 62,
+    bottom: 70,
     left: 54,
   }
 
@@ -222,13 +263,27 @@ function Histogram({ bins, sampleMean, standardDeviation }) {
 
   const meanX = getXPosition(sampleMean)
 
+  // Опорная кривая нормального распределения N(среднее, ст. отклонение),
+  // отмасштабированная так, чтобы её пик совпадал с самым высоким столбцом.
+  const normalCurvePath =
+    showNormalCurve && standardDeviation > 0
+      ? Array.from({ length: 65 }, (_, index) => {
+          const value = minimumX + (xRange * index) / 64
+          const z = (value - sampleMean) / standardDeviation
+          const curveHeight = Math.exp(-(z * z) / 2) * chartHeight
+          const px = getXPosition(value)
+          const py = margin.top + chartHeight - curveHeight
+          return `${index === 0 ? 'M' : 'L'}${px.toFixed(1)},${py.toFixed(1)}`
+        }).join(' ')
+      : null
+
   return (
     <div className="histogram">
       <svg
         className="histogram__svg"
         viewBox={`0 0 ${width} ${height}`}
         role="img"
-        aria-label="Гистограмма распределения выборочных средних"
+        aria-label={ariaLabel}
       >
         <line
           className="histogram__grid-line"
@@ -288,6 +343,10 @@ function Histogram({ bins, sampleMean, standardDeviation }) {
           )
         })}
 
+        {normalCurvePath && (
+          <path className="histogram__normal" d={normalCurvePath} />
+        )}
+
         <line
           className="histogram__mean-line"
           x1={meanX}
@@ -301,7 +360,7 @@ function Histogram({ bins, sampleMean, standardDeviation }) {
           x={Math.min(meanX + 8, width - 135)}
           y={margin.top + 17}
         >
-          Среднее: {formatNumber(sampleMean)}
+          {markerLabel}: {formatNumber(sampleMean)}
         </text>
 
         <text
@@ -337,7 +396,7 @@ function Histogram({ bins, sampleMean, standardDeviation }) {
           y={height - 7}
           textAnchor="middle"
         >
-          Выборочное среднее
+          {axisLabel}
         </text>
 
         <text
@@ -361,12 +420,12 @@ function Histogram({ bins, sampleMean, standardDeviation }) {
 
       <div className="histogram__statistics">
         <div>
-          <span>Среднее средних</span>
+          <span>{primaryStatLabel}</span>
           <strong>{formatNumber(sampleMean)}</strong>
         </div>
 
         <div>
-          <span>Стандартное отклонение</span>
+          <span>{secondaryStatLabel}</span>
           <strong>{formatNumber(standardDeviation)}</strong>
         </div>
       </div>
@@ -412,11 +471,50 @@ function ExperimentPanel() {
     [experimentResult, resultMean],
   )
 
-  function handleRunExperiment() {
-    const safeRepetitions = Math.min(
-      Math.max(Number(repetitions) || 100, 100),
-      10000,
+  /*
+   * Демонстрационная выборка исходного распределения.
+   * Зависит только от выбранного распределения:
+   * ни размер выборки, ни число повторений её не меняют.
+   */
+  const sourceSample = useMemo(
+    () => generateSourceSample(distribution),
+    [distribution],
+  )
+
+  const sourceBins = useMemo(
+    () => createHistogram(sourceSample),
+    [sourceSample],
+  )
+
+  const sourceMean = useMemo(
+    () => calculateMean(sourceSample),
+    [sourceSample],
+  )
+
+  const sourceStandardDeviation = useMemo(
+    () => calculateStandardDeviation(sourceSample, sourceMean),
+    [sourceSample, sourceMean],
+  )
+
+  /*
+   * Смена распределения обновляет оба графика:
+   * форму исходного распределения (через sourceSample выше)
+   * и распределение выборочных средних (перегенерируем здесь).
+   */
+  function handleDistributionChange(nextDistribution) {
+    setDistribution(nextDistribution)
+
+    setExperimentResult(
+      generateSampleMeans({
+        sampleSize: Number(sampleSize),
+        distribution: nextDistribution,
+        repetitions: clampRepetitions(repetitions),
+      }),
     )
+  }
+
+  function handleRunExperiment() {
+    const safeRepetitions = clampRepetitions(repetitions)
 
     setRepetitions(safeRepetitions)
     setIsRunning(true)
@@ -448,12 +546,12 @@ function ExperimentPanel() {
   }
 
   return (
-    <div className="experiment-card">
-      <div className="experiment-controls">
-        <div className="control-group">
+    <div className="experiment">
+      <div className="experiment-settings">
+        <div className="control-group control-group--range">
           <div className="control-group__heading">
             <label htmlFor="sample-size">
-              Размер выборки
+              Размер выборки (n)
             </label>
 
             <strong>n = {sampleSize}</strong>
@@ -486,7 +584,7 @@ function ExperimentPanel() {
             id="distribution"
             value={distribution}
             onChange={(event) =>
-              setDistribution(event.target.value)
+              handleDistributionChange(event.target.value)
             }
           >
             <option value="uniform">
@@ -503,7 +601,7 @@ function ExperimentPanel() {
           </select>
         </div>
 
-        <div className="control-group">
+        <div className="control-group control-group--repetitions">
           <label htmlFor="repetitions">
             Число повторений
           </label>
@@ -519,11 +617,9 @@ function ExperimentPanel() {
               setRepetitions(event.target.value)
             }
           />
-
-          <span>От 100 до 10 000</span>
         </div>
 
-        <div className="experiment-controls__buttons">
+        <div className="experiment-settings__buttons">
           <button
             className="primary-button"
             type="button"
@@ -542,37 +638,65 @@ function ExperimentPanel() {
             Сбросить
           </button>
         </div>
-
-        <div className="experiment-summary">
-          <span>Сейчас исследуем</span>
-
-          <strong>
-            {DISTRIBUTION_LABELS[distribution]}
-            {', '}n = {sampleSize}
-          </strong>
-
-          <p>
-            Один столбец показывает, сколько выборочных
-            средних попало в соответствующий интервал.
-          </p>
-        </div>
       </div>
 
+      <p className="experiment-now">
+        <span className="experiment-now__icon" aria-hidden="true">
+          ⓘ
+        </span>
+
+        Сейчас исследуем:{' '}
+        <strong>
+          {DISTRIBUTION_LABELS[distribution].toLowerCase()}{' '}
+          распределение, n = {sampleSize},{' '}
+          {experimentResult.length.toLocaleString('ru-RU')} повторений
+        </strong>
+      </p>
+
       <div className="chart-container">
-        <div className="chart-container__heading">
-          <div>
-            <p>Результат симуляции</p>
-            <h3>Распределение выборочных средних</h3>
+        <p className="chart-hint">
+          Первый график показывает отдельные наблюдения. Второй —
+          средние, полученные из множества выборок. Сравни их форму,
+          центр и разброс.
+        </p>
+
+        <div className="distribution-comparison">
+          <div className="distribution-chart-card">
+            <div className="distribution-chart-card__heading">
+              <h4>Исходное распределение</h4>
+
+              <p className="distribution-chart-card__subtitle">
+                Отдельные наблюдения.
+              </p>
+            </div>
+
+            <Histogram
+              bins={sourceBins}
+              sampleMean={sourceMean}
+              standardDeviation={sourceStandardDeviation}
+              axisLabel="Наблюдение"
+              ariaLabel="Гистограмма исходного распределения"
+              primaryStatLabel="Среднее наблюдений"
+            />
           </div>
 
-          <span>{experimentResult.length} повторений</span>
-        </div>
+          <div className="distribution-chart-card">
+            <div className="distribution-chart-card__heading">
+              <h4>Распределение выборочных средних</h4>
 
-        <Histogram
-          bins={histogramBins}
-          sampleMean={resultMean}
-          standardDeviation={resultStandardDeviation}
-        />
+              <p className="distribution-chart-card__subtitle">
+                Одно значение — среднее одной выборки.
+              </p>
+            </div>
+
+            <Histogram
+              bins={histogramBins}
+              sampleMean={resultMean}
+              standardDeviation={resultStandardDeviation}
+              showNormalCurve
+            />
+          </div>
+        </div>
       </div>
     </div>
   )

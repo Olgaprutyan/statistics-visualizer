@@ -1,16 +1,49 @@
-# React + Vite
+# Statistics Visualizer
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An open interactive textbook on statistics, econometrics, and causal inference.
 
-Currently, two official plugins are available:
+The project is designed for students of economics and social sciences who know basic mathematics but want to understand the intuition behind statistical formulas.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Main idea
 
-## React Compiler
+Each topic follows the same learning sequence:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. Question
+2. Prediction
+3. Interactive experiment
+4. Observation
+5. Intuitive explanation
+6. Formal derivation
+7. Independent exploration
+8. Exercises
 
-## Expanding the ESLint configuration
+The goal is not only to show formulas, but to help the reader discover why they work.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Current topic
+
+The first prototype explains the Central Limit Theorem through an interactive simulation.
+
+The page includes:
+
+- a sample-size control;
+- a choice of source distribution;
+- repeated sampling;
+- a histogram of sample means;
+- navigation between lesson sections;
+- intuitive and formal explanations.
+
+## Technology
+
+- React
+- Vite
+- JavaScript
+- CSS
+- KaTeX
+- Interactive charts
+
+## Run locally
+
+Install dependencies:
+
+```bash
+npm install

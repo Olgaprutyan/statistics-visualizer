@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { textbook } from '../data/textbook'
+import { clearPersistedProgress } from '../usePersistentState'
 
 function Sidebar() {
   const currentChapter = textbook.find((chapter) => chapter.isCurrent)
@@ -62,10 +63,10 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar__header">
-        <div className="sidebar__logo">S</div>
-
         <div>
-          <p className="sidebar__project-name">StatLab</p>
+          <p className="sidebar__project-name">
+            Stat<span>Lab</span>
+          </p>
 
           <p className="sidebar__project-description">
             Интерактивная статистика
@@ -135,6 +136,17 @@ function Sidebar() {
 
       <div className="sidebar__footer">
         <a href="#about">О проекте</a>
+
+        <button
+          className="sidebar__reset"
+          type="button"
+          onClick={() => {
+            clearPersistedProgress()
+            window.location.reload()
+          }}
+        >
+          Сбросить прогресс
+        </button>
       </div>
     </aside>
   )
