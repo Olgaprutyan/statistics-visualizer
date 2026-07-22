@@ -8,6 +8,33 @@ export const textbook = [
     id: 'probability-data',
     number: 1,
     title: 'Вероятность и данные',
+    sections: [
+      { id: 'pd-intro', title: 'От наблюдений к выборке' },
+      {
+        id: 'sample-and-population',
+        title: 'Почему одной выборки недостаточно?',
+      },
+      { id: 'what-is-random', title: 'Что именно случайно?' },
+      {
+        id: 'sampling-variability',
+        title: 'Почему результаты меняются?',
+      },
+      { id: 'key-takeaways', title: 'Что нужно запомнить' },
+    ],
+  },
+  {
+    id: 'probability-language',
+    number: null,
+    title: 'Вероятность как язык',
+    sections: [
+      { id: 'pl-intro', title: 'Вероятность как язык' },
+      { id: 'possible-outcomes', title: 'Возможные результаты' },
+      { id: 'outcomes-and-events', title: 'Исходы и события' },
+      { id: 'meaning-of-probability', title: 'Что означает вероятность?' },
+      { id: 'probability-and-frequency', title: 'Вероятность и частота' },
+      { id: 'law-of-large-numbers', title: 'Закон больших чисел' },
+      { id: 'key-takeaways', title: 'Что нужно запомнить' },
+    ],
   },
   {
     id: 'descriptive-statistics',
@@ -43,10 +70,6 @@ export const textbook = [
       {
         id: 'center-height',
         title: 'Почему центр высокий',
-      },
-      {
-        id: 'observation',
-        title: 'Что ты заметил?',
       },
       {
         id: 'stability',

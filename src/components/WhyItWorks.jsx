@@ -84,7 +84,7 @@ const IDEA_STEPS = [
   },
   {
     title: 'Сумма наблюдений',
-    text: 'Складываем их — именно сумма, а значит и среднее, нас интересует.',
+    text: 'Складываем наблюдения: выборочное среднее — это их сумма, делённая на n. Поэтому изучать среднее и изучать сумму почти одно и то же.',
   },
   {
     title: 'Вычитаем среднее',
@@ -198,7 +198,7 @@ function WhyItWorks() {
     null,
   )
   const [proofOpen, setProofOpen] = usePersistentState('wiw.proofOpen', {
-    intuition: true,
+    intuition: false,
     rigorous: false,
   })
   const toggleProofBlock = (key) =>
@@ -562,6 +562,20 @@ function WhyItWorks() {
                       })()}
                   </div>
                 </div>
+
+                {(proofOpen.intuition || proofOpen.rigorous) && (
+                  <div className="wiw-proof-foot">
+                    <button
+                      type="button"
+                      className="wiw-proof-close"
+                      onClick={() =>
+                        setProofOpen({ intuition: false, rigorous: false })
+                      }
+                    >
+                      ↑ Свернуть доказательство
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -576,6 +590,16 @@ function WhyItWorks() {
                 </button>
 
                 <IdeaProof onSelectProof={(id) => setSelectedProof(id)} />
+
+                <div className="wiw-proof-foot">
+                  <button
+                    type="button"
+                    className="wiw-proof-close"
+                    onClick={() => setSelectedProof(null)}
+                  >
+                    ↑ Свернуть
+                  </button>
+                </div>
               </div>
             )}
           </div>

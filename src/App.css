@@ -567,14 +567,32 @@ a {
 .sidebar__chapter-title {
   display: flex;
   gap: 6px;
+  width: 100%;
+  border: none;
   padding: 11px 12px;
   border-radius: var(--radius-small);
+  background: none;
   color: var(--sidebar-text);
+  font-family: var(--font-ui);
   font-size: 14px;
   line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
 }
 
-.sidebar__chapter-title--active {
+.sidebar__chapter-title:not(.sidebar__chapter-title--disabled):hover {
+  background: var(--surface-soft);
+  color: var(--text-primary);
+}
+
+.sidebar__chapter-title--disabled {
+  cursor: default;
+  opacity: 0.72;
+}
+
+.sidebar__chapter-title--active,
+.sidebar__chapter-title--active:hover {
   background: var(--accent-light);
   color: var(--accent-hover);
   font-weight: 700;
@@ -725,6 +743,53 @@ a {
   margin: 0 0 28px;
   padding: 40px 0 0;
   text-align: left;
+}
+
+/*
+ * Заголовок главы: строка-«надзаголовок» вида
+ * «Тема 3 ———— НАЗВАНИЕ ГЛАВЫ», под ней — крупный вопрос-заголовок.
+ */
+.chapter-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 22px;
+}
+
+.chapter-eyebrow__num {
+  flex-shrink: 0;
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.chapter-eyebrow__rule {
+  flex: 0 1 300px;
+  height: 1px;
+  background: var(--border);
+}
+
+.chapter-eyebrow__name {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+  font-family: var(--font-head);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+@media (max-width: 560px) {
+  .chapter-eyebrow {
+    flex-wrap: wrap;
+    gap: 10px 14px;
+  }
+
+  .chapter-eyebrow__rule {
+    display: none;
+  }
 }
 
 .section-label {
@@ -1005,13 +1070,17 @@ a {
 /* Мотивация, переходы и акцентная мысль */
 
 .motivation-card {
-  margin: 0 0 20px;
+  margin: 48px 0 20px;
 }
 
 .motivation-card h3 {
-  margin: 0 0 12px;
+  margin: 0 0 14px;
   font-size: 21px;
   letter-spacing: -0.02em;
+}
+
+.motivation-card p {
+  line-height: 1.75;
 }
 
 .motivation-card p {
@@ -1281,6 +1350,25 @@ a {
   line-height: 1.6;
 }
 
+/* Выделенная подсказка «как читать графики» */
+.chart-callout {
+  max-width: 680px;
+  margin: 0 0 20px;
+  border: 1px solid var(--accent-subtle);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius-medium);
+  padding: 12px 16px;
+  background: var(--accent-light);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.chart-callout strong {
+  font-family: var(--font-head);
+  color: var(--accent-hover);
+}
+
 .distribution-comparison {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1365,6 +1453,787 @@ a {
   stroke: var(--accent);
   stroke-width: 2.5;
   opacity: 0.9;
+}
+
+/* ------------------------------------------------------------------
+ * Мини-иллюстрации внутри доказательств (proof viz).
+ * Единая структура: вопрос → интерактив → что произошло → зачем.
+ * ------------------------------------------------------------------ */
+.pviz {
+  max-width: 540px;
+  margin: 22px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
+  padding: 15px 16px;
+  background: var(--surface-soft);
+  font-family: var(--font-ui);
+}
+
+.pviz__label {
+  margin: 0 0 4px;
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pviz__title {
+  margin: 0 0 4px;
+  font-family: var(--font-head);
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+
+.pviz__q {
+  margin: 0 0 12px;
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.pviz__stage {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pviz__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 18px;
+}
+
+.pviz__control {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 180px;
+  flex: 1;
+}
+
+.pviz__control-label {
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pviz__slider {
+  width: 100%;
+  accent-color: var(--accent);
+}
+
+.pviz__toggle {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.pviz__btn {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 14px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.pviz__btn:hover {
+  border-color: var(--accent-muted);
+}
+
+.pviz__btn--active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent-hover);
+}
+
+/* Группа управления: подпись-заголовок над рядом кнопок.
+ * Без этого правила подпись и кнопки слипались в один поток. */
+.pviz__group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pviz__group > .pviz__label {
+  flex-basis: 100%;
+  margin: 0 0 2px;
+}
+
+.pviz__group > .pviz__btn {
+  min-width: 48px;
+  text-align: center;
+}
+
+.pviz__svg {
+  display: block;
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  background: var(--chart-bg);
+}
+
+/* Оси и сетки */
+.pviz-axis {
+  stroke: var(--axis-color);
+  stroke-width: 1;
+}
+
+.pviz-grid {
+  stroke: var(--border);
+  stroke-width: 0.5;
+}
+
+.pviz-tick {
+  fill: var(--text-secondary);
+  font-size: 10px;
+  font-family: var(--font-ui);
+}
+
+/* Кривые: «настоящая» — нейтральная, ключевая/предельная — акцент */
+.pviz-curve {
+  fill: none;
+  stroke: var(--text-secondary);
+  stroke-width: 2;
+}
+
+.pviz-curve--accent {
+  stroke: var(--accent);
+}
+
+.pviz-curve--approx {
+  stroke: var(--accent);
+  stroke-dasharray: 5 4;
+}
+
+.pviz-curve--muted {
+  stroke: var(--dot-muted);
+  stroke-dasharray: 4 4;
+}
+
+.pviz-marker {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+}
+
+.pviz-dot {
+  fill: var(--accent);
+}
+
+.pviz-band {
+  fill: var(--accent-light);
+  opacity: 0.6;
+}
+
+.pviz-legend {
+  fill: var(--text-secondary);
+  font-size: 11px;
+  font-family: var(--font-ui);
+}
+
+.pviz__readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pviz__readout b {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.pviz__result {
+  margin: 11px 0 0;
+  color: var(--text-primary);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.pviz__takeaway {
+  margin: 11px 0 0;
+  border-left: 2px solid var(--accent);
+  padding: 3px 0 3px 13px;
+  color: var(--text-primary);
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+
+.pviz__takeaway strong {
+  font-family: var(--font-head);
+  color: var(--accent-hover);
+}
+
+@media (max-width: 560px) {
+  .pviz__control {
+    min-width: 100%;
+  }
+}
+
+/* ==================================================================
+ * Глава «Вероятность и данные» — статические блоки страницы
+ * ================================================================== */
+
+.pd-defs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 22px 0;
+}
+
+.pd-def {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
+  padding: 16px 18px;
+  background: var(--surface);
+}
+
+.pd-def h4 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--accent);
+}
+
+.pd-def p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.pd-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin: 22px 0;
+}
+
+.pd-column h4 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.pd-column p {
+  margin: 0 0 8px;
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.pd-column ul {
+  margin: 0 0 14px;
+  padding-left: 20px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.pd-highlight,
+.pd-note {
+  max-width: 68ch;
+  margin: 22px 0;
+  border-left: 3px solid var(--accent);
+  padding: 6px 0 6px 18px;
+  color: var(--text-primary);
+  font-size: 17px;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+.pd-note {
+  font-size: 15px;
+  font-style: normal;
+  color: var(--text-secondary);
+}
+
+.pd-definition-block {
+  margin: 20px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
+  padding: 16px 18px;
+  background: var(--surface-soft);
+}
+
+.pd-definition-block strong {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--font-head);
+  font-size: 15px;
+}
+
+.pd-definition-block p {
+  margin: 0 0 10px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.pd-definition-block p:last-child {
+  margin-bottom: 0;
+}
+
+.pd-weight-grid {
+  display: grid;
+  max-width: 760px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  margin: 18px 0 24px;
+}
+
+.pd-weight-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
+  padding: 15px 18px;
+  background: var(--surface);
+}
+
+.pd-weight-card strong {
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-size: 17px;
+}
+
+.pd-weight-card span {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.pd-details {
+  margin: 18px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
+  background: var(--surface);
+}
+
+.pd-details > summary {
+  padding: 12px 16px;
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  list-style: none;
+}
+
+.pd-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+.pd-details > summary::before {
+  content: "▸ ";
+  color: var(--text-secondary);
+}
+
+.pd-details[open] > summary::before {
+  content: "▾ ";
+}
+
+.pd-details__body {
+  padding: 4px 16px 16px;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.pd-takeaways {
+  max-width: 68ch;
+  margin: 8px 0 0;
+  padding: 0 0 0 6px;
+  list-style: none;
+  counter-reset: pd;
+}
+
+.pd-takeaways li {
+  position: relative;
+  padding: 14px 0 14px 40px;
+  border-top: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 17px;
+  line-height: 1.55;
+  counter-increment: pd;
+}
+
+.pd-takeaways li::before {
+  content: counter(pd);
+  position: absolute;
+  left: 0;
+  top: 14px;
+  color: var(--accent);
+  font-family: var(--font-head);
+  font-weight: 700;
+}
+
+.pd-next h2 {
+  margin-bottom: 12px;
+}
+
+.pd-next p {
+  max-width: 68ch;
+  margin: 0 0 20px;
+  color: var(--text-secondary);
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+/* ------------------------------------------------------------------
+ * Интерактивные эксперименты главы
+ * ------------------------------------------------------------------ */
+
+.pd-exp {
+  margin: 24px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-large);
+  padding: 20px 22px;
+  background: var(--surface);
+}
+
+.pd-exp__title {
+  margin: 0 0 4px;
+  font-family: var(--font-head);
+  font-size: 16px;
+}
+
+.pd-exp__hint {
+  margin: 0 0 16px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.pd-exp__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: 22px;
+  align-items: start;
+}
+
+.pd-exp__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pd-exp__sizes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.pd-exp__plot {
+  margin-top: 24px;
+}
+
+.pd-exp__label {
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.pd-hist-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.pd-plot {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.pd-exp__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.pd-exp__stat-main {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-exp__stat-muted {
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-exp__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-exp__table th,
+.pd-exp__table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+}
+
+.pd-exp__table th {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.pd-exp__table--wide {
+  margin-top: 16px;
+}
+
+.pd-mean-readout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 0;
+}
+
+.pd-mean-readout div {
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.pd-mean-readout dt {
+  margin: 0 0 3px;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.pd-mean-readout dd {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.pd-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 74px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  padding: 10px 12px;
+  background: var(--input-bg);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+
+/* Опросы / варианты ответа */
+.pd-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 6px 0 0;
+}
+
+.pd-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  padding: 11px 14px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.45;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.pd-option:hover {
+  border-color: var(--accent-muted);
+}
+
+.pd-option--selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.pd-option--correct {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+.pd-option--wrong {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+}
+
+.pd-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+
+.pd-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  padding: 11px 14px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.45;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.pd-checkbox:hover {
+  border-color: var(--accent-muted);
+}
+
+.pd-checkbox input {
+  margin-top: 3px;
+  accent-color: var(--accent);
+}
+
+.pd-checkbox--selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.pd-checkbox--correct {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+.pd-checkbox--wrong {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+}
+
+.pd-checkbox--missed {
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+}
+
+/* Метка-итог справа в строке варианта после проверки */
+.pd-checkbox__tag {
+  margin-left: auto;
+  align-self: center;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 11px;
+  background: var(--surface);
+  font-family: var(--font-ui);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pd-checkbox__tag--ok {
+  border-color: var(--success-border);
+  color: var(--success-text);
+}
+
+.pd-checkbox__tag--wrong {
+  border-color: var(--error-border);
+  color: var(--error-text);
+}
+
+.pd-checkbox__tag--missed {
+  border-color: var(--warning-border);
+  color: var(--warning-text);
+}
+
+/* Общий вердикт после проверки */
+.pd-verdict {
+  margin: 14px 0 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  padding: 11px 14px;
+  font-family: var(--font-ui);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.pd-verdict--ok {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+  color: var(--success-text);
+}
+
+.pd-verdict--partial {
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+  color: var(--warning-text);
+}
+
+.pd-feedback {
+  margin: 14px 0 0;
+  border-left: 3px solid var(--accent);
+  padding: 4px 0 4px 16px;
+  color: var(--text-primary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.pd-q {
+  margin: 18px 0 8px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.pd-btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+@media (max-width: 767px) {
+  .pd-defs {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-weight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-exp__row {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-mean-readout {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-exp {
+    padding: 16px;
+  }
 }
 
 .histogram__mean-line {
@@ -1971,11 +2840,11 @@ a {
   padding-left: 20px;
   color: var(--text-secondary);
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 .info-card li {
-  margin-bottom: 6px;
+  margin-bottom: 9px;
 }
 
 .info-card li:last-child {
@@ -3836,6 +4705,33 @@ a {
 .wiw-backpath:hover {
   color: var(--accent-hover);
   text-decoration: underline;
+}
+
+.wiw-proof-foot {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.wiw-proof-close {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 18px;
+  background: var(--surface);
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+}
+
+.wiw-proof-close:hover {
+  border-color: var(--accent);
+  color: var(--accent-hover);
+  background: var(--accent-light);
 }
 
 .wiw-screen {
@@ -6347,6 +7243,14 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+
   .ipv-bar__fill,
   .fmv-row__fill,
   .ipv-order-btn {
@@ -6547,5 +7451,246 @@ a {
   .histogram__statistics > div + div {
     border-top: 1px solid var(--border);
     border-left: none;
+  }
+}
+
+/* ======================================================================
+   Часть II «Вероятность как язык неопределённости».
+   Переиспользует базовые классы pd-* и pviz__*; ниже — только то, что
+   специфично для этой части. Оформление нейтральное: тонкие границы,
+   умеренные скругления, фиолетовый (accent) как единственный акцент.
+   ====================================================================== */
+
+/* Отключённые кнопки-переключатели (используются в экспериментах). */
+.pviz__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pviz__btn:disabled:hover {
+  border-color: var(--border);
+}
+
+/* Блок вопроса с выбором. */
+.pl-question {
+  margin-top: 20px;
+}
+
+.pl-question__label {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Простые маркированные списки внутри учебного текста. */
+.pl-list {
+  margin: 12px 0;
+  padding-left: 22px;
+  color: var(--text-primary);
+}
+
+.pl-list li {
+  margin: 4px 0;
+}
+
+/* §8.3 Обзор сценариев: процедура → возможные результаты. */
+.pl-scenario {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.pl-scenario__row {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 16px;
+  padding: 12px 16px;
+}
+
+.pl-scenario__row + .pl-scenario__row {
+  border-top: 1px solid var(--border);
+}
+
+.pl-scenario__key {
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pl-scenario__value {
+  color: var(--text-primary);
+}
+
+.pl-outcome-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.pl-outcome-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  font-size: 13px;
+}
+
+/* §9.3 Сетка исходов кубика 1..6. */
+.pl-outcome-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.pl-outcome-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease, color 150ms ease;
+}
+
+.pl-outcome-btn:hover {
+  border-color: var(--accent-muted);
+}
+
+.pl-outcome-btn--on {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent-hover);
+}
+
+.pl-outcome-grid--static .pl-outcome-btn {
+  cursor: default;
+}
+
+.pl-outcome-btn--fixed {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent-hover);
+}
+
+.pl-outcome-btn--muted {
+  opacity: 0.4;
+}
+
+.pl-event__tasks {
+  flex-wrap: wrap;
+}
+
+/* §10.3 / §14.4 Последовательность результатов 0/1. */
+.pl-sequence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.pl-bit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-small);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.pl-bit--one {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent-hover);
+}
+
+.pl-bit--zero {
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+}
+
+/* §10.3 Компактная история последних серий. */
+.pl-history {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
+  background: var(--surface);
+  padding: 12px 16px;
+}
+
+.pl-history__title {
+  margin: 0 0 6px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.pl-history__list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.pl-history__list li {
+  margin: 2px 0;
+}
+
+/* §12.2 / §14.4 Ряд кнопок действий эксперимента. */
+.pl-run__actions {
+  flex-wrap: wrap;
+}
+
+/* §11.2 Горизонтальная прокрутка таблицы сравнения на узких экранах. */
+.pl-table-scroll {
+  overflow-x: auto;
+  margin: 16px 0;
+}
+
+/* §15 Формальный итог: аккуратная сетка определений. */
+.pl-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.pl-summary__item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-medium);
+  background: var(--surface);
+  padding: 14px 16px;
+}
+
+.pl-summary__item h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+
+.pl-summary__item p {
+  margin: 8px 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Мобильная версия: элементы управления над графиком уже идут сверху
+   (разметка), здесь — упрощаем сетки. */
+@media (max-width: 767px) {
+  .pl-scenario__row {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 }

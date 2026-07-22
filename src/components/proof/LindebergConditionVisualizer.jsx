@@ -541,6 +541,11 @@ function LindebergConditionVisualizer() {
 
       <div className="lcv__main">
         <div className="lcv__left">
+          <p className="lcv__caption">
+            Каждый прямоугольник — одно нормированное слагаемое{' '}
+            <TeX>{'Y_{n,k}'}</TeX>; его высота показывает типичный размер
+            этого слагаемого.
+          </p>
           <TermsSchema
             scenario={scenario}
             termCount={termCount}

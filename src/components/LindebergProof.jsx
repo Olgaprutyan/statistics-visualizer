@@ -1,5 +1,6 @@
 import TeX from './proof/TeX'
 import LindebergConditionVisualizer from './proof/LindebergConditionVisualizer'
+import RemainderControl from './proof/RemainderControl'
 
 function LindebergProof() {
   return (
@@ -103,6 +104,13 @@ function LindebergProof() {
       <TeX block>
         {'Y_{n,k} = \\frac{X_{n,k}}{s_n}, \\qquad v_{n,k} = \\operatorname{Var}(Y_{n,k}) = \\frac{\\sigma_{n,k}^2}{s_n^2}.'}
       </TeX>
+
+      <p>
+        Здесь <TeX>{'v_{n,k}'}</TeX> — дисперсия нормированного слагаемого{' '}
+        <TeX>{'Y_{n,k}'}</TeX>: она показывает, какую долю общей дисперсии
+        суммы несёт <TeX>{'k'}</TeX>-е слагаемое (все такие доли в сумме
+        дают единицу).
+      </p>
 
       <p>
         Тогда <TeX>{'\\mathbb{E}[Y_{n,k}] = 0'}</TeX>, а сумма дисперсий в
@@ -242,6 +250,8 @@ function LindebergProof() {
           {'\\boxed{\\;\\sum_{k=1}^{k_n} |r_{n,k}(t)| \\longrightarrow 0\\;}'}
         </TeX>
       </div>
+
+      <RemainderControl />
 
       <h3>9. Сумма отклонений и малость множителей</h3>
 

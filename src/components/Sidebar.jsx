@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react'
 import { textbook } from '../data/textbook'
 import { clearPersistedProgress } from '../usePersistentState'
+import { useChapter } from '../ChapterContext'
 
 function Sidebar() {
-  const currentChapter = textbook.find((chapter) => chapter.isCurrent)
+  const { activeChapter, goToChapter } = useChapter()
+
+  const currentChapter = textbook.find(
+    (chapter) => chapter.id === activeChapter,
+  )
 
   const sections = currentChapter?.sections ?? []
 
@@ -78,14 +83,22 @@ function Sidebar() {
         className="sidebar__navigation"
         aria-label="Навигация по учебнику"
       >
-        {textbook.map((chapter) => (
+        {textbook.map((chapter) => {
+          const isActiveChapter = chapter.id === activeChapter
+          const isNavigable = Boolean(chapter.sections)
+
+          return (
           <div className="sidebar__chapter" key={chapter.id}>
-            <div
+            <button
+              type="button"
               className={
-                chapter.isCurrent
-                  ? 'sidebar__chapter-title sidebar__chapter-title--active'
-                  : 'sidebar__chapter-title'
+                'sidebar__chapter-title' +
+                (isActiveChapter ? ' sidebar__chapter-title--active' : '') +
+                (isNavigable ? '' : ' sidebar__chapter-title--disabled')
               }
+              disabled={!isNavigable}
+              aria-current={isActiveChapter ? 'page' : undefined}
+              onClick={() => isNavigable && goToChapter(chapter.id)}
             >
               {chapter.number && (
                 <span className="sidebar__chapter-number">
@@ -94,9 +107,9 @@ function Sidebar() {
               )}
 
               <span>{chapter.title}</span>
-            </div>
+            </button>
 
-            {chapter.isCurrent && chapter.sections && (
+            {isActiveChapter && chapter.sections && (
               <div className="sidebar__sections">
                 {chapter.sections.map((section, sectionIndex) => {
                   const isActive = section.id === activeSection
@@ -131,7 +144,8 @@ function Sidebar() {
               </div>
             )}
           </div>
-        ))}
+          )
+        })}
       </nav>
 
       <div className="sidebar__footer">

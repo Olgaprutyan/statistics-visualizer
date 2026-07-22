@@ -654,10 +654,10 @@ function ExperimentPanel() {
       </p>
 
       <div className="chart-container">
-        <p className="chart-hint">
-          Первый график показывает отдельные наблюдения. Второй —
-          средние, полученные из множества выборок. Сравни их форму,
-          центр и разброс.
+        <p className="chart-callout">
+          <strong>Как читать графики.</strong> Первый график показывает
+          отдельные наблюдения. Второй — средние, полученные из множества
+          выборок. Сравни их форму, центр и разброс.
         </p>
 
         <div className="distribution-comparison">
